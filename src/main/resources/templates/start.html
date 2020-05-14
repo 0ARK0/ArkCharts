@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ArkCharts Start</title>
+    <script th:src="@{/static/js/echarts.min.js}"></script>
+    <script th:src="@{/static/js/jquery-1.11.0.min.js}"></script>
+    <link th:href="@{/static/css/public.css}" rel="stylesheet">
+    <link th:href="@{/static/css/start.css}" rel="stylesheet">
+</head>
+<body>
+<div id="top-menu" class="shadow">
+    <div class="logo">
+        <img th:src="@{/static/img/logo.png}" width="220px" height="70px">
+    </div>
+</div>
+<div class="main">
+    <div class="chartContentDiv shadow">
+        <div class="addChartDiv" onclick="">
+            <img th:src="@{/static/img/plus.png}" width="100px" height="100px">
+        </div>
+    </div>
+</div>
+
+<!--隐藏框-->
+<div class="fullHide"></div>
+<script th:src="@{/static/js/start.js}"></script>
+</body>
+</html>

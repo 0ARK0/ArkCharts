@@ -1,0 +1,66 @@
+img:hover{
+    cursor: pointer;
+}
+
+.chartContentDiv{
+    text-align: center;
+    float: left;
+    margin-top: 40px;
+    margin-left: 40px;
+    margin-bottom: 10px;
+    width: 200px;
+    height: 200px;
+    background-color: #f5f6fa;
+    border: #b9bbbe 1px solid;
+    border-radius: 10px;
+    /*动画效果*/
+    -webkit-transition: background-color 0.7s; /* For Safari 3.1 to 6.0  ,-webkit-transform 1s*/
+    transition: background-color 0.7s; /*, transform 1s*/
+}
+.chartContentDiv:hover{
+    cursor: pointer;
+    /*-webkit-transform: rotate(360deg); !* Chrome, Safari, Opera *!*/
+    /*transform: rotate(360deg);*/
+    background-color: #353b48;
+    color: white;
+}
+
+.addChartDiv {
+    padding-top: 50px;
+}
+
+.chartName{
+    width: 100%;
+    height: 20px;
+    text-overflow:ellipsis;
+    overflow:hidden;
+    white-space:nowrap;
+}
+
+.chartDiv{
+    width: 200px;
+    height: 160px;
+}
+
+.chartDivBottom{
+    width: 100%;
+    height: 20px;
+}
+
+.chartOpen{
+    float: left;
+    width: 50%;
+    border-bottom-left-radius:10px;
+}
+.chartOpen:hover{
+    background-color: #16a085;
+}
+
+.chartDelete{
+    float: left;
+    width: 50%;
+    border-bottom-right-radius:10px;
+}
+.chartDelete:hover{
+    background-color: #d63031;
+}
