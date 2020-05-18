@@ -2,6 +2,10 @@ body{
     margin: 0px;
 }
 
+img:hover{
+    cursor: pointer;
+}
+
 .shadow{
     /*阴影效果*/
     filter:progid:DXImageTransform.Microsoft.Shadow(color=#909090,direction=120,strength=4);
@@ -19,6 +23,37 @@ body{
     border: #b9bbbe 1px solid;
 }
 
+/*文件上传*/
+.uploadDiv{
+    top: 20px;
+    left: 20px;
+    width: 120px;
+    height: 20px;
+    position: absolute;
+    background-color: #ecf0f1;
+    text-align: center;
+    color: black;
+    padding: 8px 30px;
+    border: #78C3F3 solid 1px;
+    border-radius: 4px;
+}
+.file{
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+.question{
+    top: 30px;
+    left: 210px;
+    position: absolute;
+}
+
 .logo{
     position: absolute;
     top: 0;
@@ -28,11 +63,10 @@ body{
     background-color: white;
 }
 
-#topItem{
+.topItem{
     float: left;
-    margin-left: 100px;
-    margin-top: 5px;
-    width: 250px;
+    margin-left: 70px;
+    margin-top: 15px;
     height: 40px;
     text-align: center;
     color: #ecf0f1;
@@ -47,7 +81,7 @@ body{
     height: 700px;
     top: 0px;
     left: 0px;
-    z-index: 2000;
+    z-index: 1000;
     display: none;
 }
 
@@ -81,7 +115,7 @@ body{
 }
 
 /*input 输入框*/
-input{
+input[type='text']{
     box-sizing: border-box;
     text-align:center;
     font-size:1em;
@@ -100,4 +134,212 @@ input:focus{
     border:1px solid cornflowerblue;
 }
 
+/*表格样式*/
+table {
+    *border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    overflow-x: auto;
+}
+.zebra td, .zebra th {
+    padding: 10px;
+    border-bottom: 1px solid #f2f2f2;
+}
+.zebra tbody tr:nth-child(even) {
+    background: #f5f5f5;
+    -webkit-box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;
+    -moz-box-shadow:0 1px 0 rgba(255,255,255,.8) inset;
+    box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;
+}
+.zebra th {
+    text-align: left;
+    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+    border-bottom: 1px solid #ccc;
+    background-color: #eee;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#f5f5f5), to(#eee));
+    background-image: -webkit-linear-gradient(top, #f5f5f5, #eee);
+    background-image: -moz-linear-gradient(top, #f5f5f5, #eee);
+    background-image: -ms-linear-gradient(top, #f5f5f5, #eee);
+    background-image: -o-linear-gradient(top, #f5f5f5, #eee);
+    background-image: linear-gradient(top, #f5f5f5, #eee);
+}
+.zebra th:first-child {
+    -moz-border-radius: 6px 0 0 0;
+    -webkit-border-radius: 6px 0 0 0;
+    border-radius: 6px 0 0 0;
+}
+.zebra th:last-child {
+    -moz-border-radius: 0 6px 0 0;
+    -webkit-border-radius: 0 6px 0 0;
+    border-radius: 0 6px 0 0;
+}
+.zebra th:only-child{
+    -moz-border-radius: 6px 6px 0 0;
+    -webkit-border-radius: 6px 6px 0 0;
+    border-radius: 6px 6px 0 0;
+}
+.zebra tfoot td {
+    border-bottom: 0;
+    border-top: 1px solid #fff;
+    background-color: #f1f1f1;
+}
+.zebra tfoot td:first-child {
+    -moz-border-radius: 0 0 0 6px;
+    -webkit-border-radius: 0 0 0 6px;
+    border-radius: 0 0 0 6px;
+}
+.zebra tfoot td:last-child {
+    -moz-border-radius: 0 0 6px 0;
+    -webkit-border-radius: 0 0 6px 0;
+    border-radius: 0 0 6px 0;
+}
+.zebra tfoot td:only-child{
+    -moz-border-radius: 0 0 6px 6px;
+    -webkit-border-radius: 0 0 6px 6px;
+    border-radius: 0 0 6px 6px;
+}
 
+.settings{
+    position: absolute;
+    width: 400px;
+    height: 500px;
+    top: 70px;
+    left: 550px;
+    border: #b9bbbe 1px solid;
+    z-index: 1500;
+    display: none;
+    background-color: white;
+    border-radius: 5px;
+}
+.settings-top{
+    width: 100%;
+    height: 30px;
+}
+.settings-name{
+    text-align: center;
+    padding-left: 10px;
+    float: left;
+    font-size: 24px;
+    width: 335px;
+    text-overflow:ellipsis;
+    overflow:hidden;
+    white-space:nowrap;
+}
+.settings-close{
+    text-align: center;
+    padding: 2px;
+    font-size: 20px;
+    float: left;
+    width: 50px;
+    border-top-right-radius: 5px;
+}
+.settings-close:hover{
+    cursor: pointer;
+    color: #f5f6fa;
+    background-color: #d63031;
+}
+.settingsBody{
+    width: 100%;
+    font-size: 16px;
+    padding-top: 10px;
+    height: 370px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.settingsBody-item{
+    float: left;
+    width: 100%;
+    padding-left: 20px;
+    height: 30px;
+    margin-bottom: 20px;
+}
+.settings-bottom{
+    width: 100%;
+    text-align: center;
+    height: 50px;
+    padding-top: 10px;
+}
+
+.msgDiv{
+    position: absolute;
+    z-index: 3000;
+    width: 400px;
+    height: 500px;
+    top:100px;
+    left:550px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border: #b9bbbe 1px solid;
+    z-index: 3000;
+    display: none;
+    background-color: white;
+    border-radius: 5px;
+}
+.msgDiv-head{
+    width: 100%;
+    text-align: center;
+    height: 50px;
+    font-size: 18px;
+    padding-top: 10px;
+    text-overflow:ellipsis;
+    overflow:hidden;
+    white-space:nowrap;
+}
+.msgDiv-content{
+    width: 100%;
+    height: 400px;
+    font-size: 18px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.msgDiv-button{
+    width: 100%;
+    height: 100px;
+    text-align: center;
+}
+
+/*右击显示的弹出框*/
+.click-menu {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    display: none;
+    z-index: 1000;
+    background-color: white;
+    border: #b9bbbe 1px solid;
+    border-radius: 5px;
+    /*阴影效果*/
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#909090,direction=120,strength=4);
+    -moz-box-shadow: 2px 2px 10px #909090;
+    -webkit-box-shadow: 2px 2px 10px #909090;
+    box-shadow:2px 2px 10px #909090;
+}
+.click-menu:hover{
+    cursor: pointer;
+}
+.right-click-menu-inner{
+    padding: 10px;
+    width: 131px;
+    height: 30px;
+}
+.right-click-menu-inner:hover{
+    cursor: pointer;
+    background-color: #b9bbbe;
+}
+.right-click-menu-inner a:link{
+    color: black;
+}
+.right-click-menu-inner a:visited{
+    color: black;
+}
+.right-click-menu-inner a{
+    text-decoration: none;
+}
+
+/*信息显示框*/
+.input-menu{
+    text-align: center;
+    background-color: #576574;
+    padding: 10px;
+    color: white;
+}

@@ -5,6 +5,7 @@
     <title>ArkCharts Start</title>
     <script th:src="@{/static/js/echarts.min.js}"></script>
     <script th:src="@{/static/js/jquery-1.11.0.min.js}"></script>
+    <script th:src="@{/static/js/public.js}"></script>
     <link th:href="@{/static/css/public.css}" rel="stylesheet">
     <link th:href="@{/static/css/start.css}" rel="stylesheet">
 </head>
@@ -13,17 +14,63 @@
     <div class="logo">
         <img th:src="@{/static/img/logo.png}" width="220px" height="70px">
     </div>
+    <div class="topItem" style="padding-left: 200px;padding-top: 5px">
+        我的图表
+    </div>
 </div>
 <div class="main">
     <div class="chartContentDiv shadow">
-        <div class="addChartDiv" onclick="">
+        <div class="addChartDiv" onclick="openChooseTypeDiv()">
             <img th:src="@{/static/img/plus.png}" width="100px" height="100px">
         </div>
     </div>
 </div>
 
 <!--隐藏框-->
+<div id="chooseTypeDiv" class="shadow">
+    <div id="typeTop">
+        <div class="typeTop-item">
+            请选择要创建的图表类型
+        </div>
+        <div style="float: right; padding-right: 3%;padding-top: 1%;">
+            <button class="btn close-btn" onclick="closeChooseTypeDiv()">关闭</button>
+        </div>
+    </div>
+    <div id="typeBodyDiv">
+        <div class="chartType">
+            <img th:src="@{/static/img/bar.png}" width="100px" height="100px" onclick="toBarPage()">
+        </div>
+        <div class="chartType">
+            <img th:src="@{/static/img/pie.png}" width="100px" height="100px" onclick="toPiePage()">
+        </div>
+        <div class="chartType">
+            <img th:src="@{/static/img/line.png}" width="100px" height="100px" onclick="">
+        </div>
+        <div class="chartType">
+            <img th:src="@{/static/img/mindMap.png}" width="100px" height="100px" onclick="toMindMapPage()">
+        </div>
+        <div class="chartType">
+            <img th:src="@{/static/img/graph.png}" width="100px" height="100px" onclick="toGraphPage()">
+        </div>
+    </div>
+</div>
 <div class="fullHide"></div>
+<!--隐藏数据-->
+<div id="chartIdList" class="hidden" th:each="chart,chartState:${chartList}">
+    <input type="hidden" th:value="${chart.chartId}">
+</div>
+<div id="jsonDataList" class="hidden" th:each="chart,chartState:${chartList}">
+    <input type="hidden" th:value="${chart.jsonStr}">
+</div>
+<div id="chartNameList" class="hidden" th:each="chart,chartState:${chartList}">
+    <input type="hidden" th:value="${chart.chartName}">
+</div>
+<div id="typeList" class="hidden" th:each="chart,chartState:${chartList}">
+    <input type="hidden" th:value="${chart.type}">
+</div>
+<div id="filePathList" class="hidden" th:each="chart,chartState:${chartList}">
+    <input type="hidden" th:value="${chart.path}">
+</div>
 <script th:src="@{/static/js/start.js}"></script>
 </body>
 </html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ArkCharts 在线图表</title>
+    <script th:src="@{/static/js/echarts.min.js}"></script>
+    <script th:src="@{/static/js/jquery-1.11.0.min.js}"></script>
+    <script th:src="@{/static/js/public.js}"></script>
+    <link th:href="@{/static/css/public.css}" rel="stylesheet">
+    <link th:href="@{/static/css/login.css}" rel="stylesheet">
+</head>
+<body>
+<div id="logo">
+    <img th:src="@{/static/img/logo.png}" width="200px" height="50px">
+</div>
+<div id="mainContent"></div>
+<div id="loginDiv"></div>
+
+<div id="loginDivUp">
+    <div id="topText">欢迎登录 ArkCharts</div>
+    <hr width="80%">
+    <div id="loginInner">
+        <form method="post" action="/ArkCharts/user/login">
+            <p>账号：</p>
+            <input type="text" name="account" th:value="${account}">
+            <p>密码：</p>
+            <input type="password" name="password" th:value="${password}">
+            <p style="height: 20px"></p>
+            <button class="btn" type="submit">登录</button>
+            <input type="button" class="btn" onclick="toRegister()" style="margin-left: 100px" value="注册">
+        </form>
+    </div>
+    <div id="msgDiv">
+        <p id="errorMsg" th:text="${errorMsg}" />
+        <p id="successMsg" th:text="${successMsg}" />
+    </div>
+</div>
+
+<script th:src="@{/static/js/login.js}"></script>
+</body>
+</html>

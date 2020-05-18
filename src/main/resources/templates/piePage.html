@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pie</title>
+    <script th:src="@{/static/js/echarts.min.js}"></script>
+    <script th:src="@{/static/js/jquery-1.11.0.min.js}"></script>
+    <script th:src="@{/static/js/public.js}"></script>
+    <link th:href="@{/static/css/public.css}" rel="stylesheet">
+    <link th:href="@{/static/css/piePage.css}" rel="stylesheet">
+</head>
+<body>
+<div id="top-menu" class="shadow">
+    <div class="uploadDiv" th:if="(${#strings.isEmpty(jsonData)})">
+        <span>上传文件</span>
+        <input id="fileUploader" class="file" type="file" accept=".xls, .xlsx" onchange="uploadFile()">
+    </div>
+    <img class="question" th:src="@{/static/img/question.png}" width="20px" height="20px"  title="查看格式要求" onclick="openMsgDiv()" th:if="(${#strings.isEmpty(jsonData)})">
+    <div class="logo" th:if="(${not #strings.isEmpty(jsonData)})">
+        <img th:src="@{/static/img/logo.png}" width="220px" height="70px">
+    </div>
+    <div class="topItem" style="padding-left: 200px">
+        <button class="btn" onclick="openSetLegendDiv()">设置系列与数值</button>
+    </div>
+    <div class="topItem">
+        <button class="btn add-btn" onclick="saveChart()">保存图表</button>
+    </div>
+    <div class="topItem">
+        <button class="btn green-btn" onclick="toStart()">我的图表</button>
+    </div>
+    <div class="topItem">
+        <button id="openMS" class="btn" onclick="openMoreSettings()">更多设置</button>
+    </div>
+</div>
+<div id="main" style="width: 98%;height: 600px;"></div>
+
+<!--隐藏div-->
+<div class="fullHide"></div>
+<div class="msgDiv shadow">
+    <div class="msgDiv-head">上传文件的格式要求</div>
+    <div class="msgDiv-content">
+        <p>1.上传文件创建图表。只能提交Excel文件，支持xls和xlsx两种格式。</p>
+        <p>2.表格内数据的格式有两种，第一种是两行，第一行是系列名，第二行是数值，示例图如下：</p>
+        <a th:href='@{/static/img/pieExcelData1.png}' target='_blank'><img width='350' height='200px' th:src='@{/static/img/pieExcelData1.png}'></a>
+        <p>上图表格对应生成的图表如下图所示：</p>
+        <a th:href='@{/static/img/pieExcelChart1.png}' target='_blank'><img width='350' height='250px' th:src='@{/static/img/pieExcelChart1.png}'></a>
+        <p>3.第二种是两列，第一列是系列名，第二列是数值，示例图如下：</p>
+        <a th:href='@{/static/img/pieExcelData2.png}' target='_blank'><img width='350' height='200px' th:src='@{/static/img/pieExcelData2.png}'></a>
+        <p>上图表格对应生成的图表如下图所示：</p>
+        <a th:href='@{/static/img/pieExcelChart2.png}' target='_blank'><img width='350' height='250px' th:src='@{/static/img/pieExcelChart2.png}'></a>
+    </div>
+    <div class="msgDiv-button">
+        <button class="btn close-btn" onclick="closeMsgDiv()">关闭</button>
+    </div>
+</div>
+<input type="hidden" id="jsonDataInput" th:value="${jsonData}">
+<input type="hidden" id="chartPathInput" th:value="${chartPath}">
+
+<!--设置系列的div-->
+<div id="setLegendDiv" class="settings shadow">
+    <div class="settings-top">
+        <div class="settings-name">设置系列</div>
+        <div class="settings-close" onclick="closeSetLegendDiv()">关闭</div>
+    </div>
+    <hr>
+    <div id="legendBody" class="settingsBody">
+    </div>
+    <div class="settings-bottom">
+        <button class="btn green-btn" onclick="setLegend()">应用</button>
+    </div>
+</div>
+<!--更多设置-->
+<div id="moreSettings" class="click-menu">
+    <div class="right-click-menu-inner" onclick="openSetChartName()">图表名称</div>
+    <div class="right-click-menu-inner" onclick="openSet3D()">显示类型</div>
+</div>
+<!--信息输入框-->
+<div class="input-menu click-menu" style="position: absolute; top: 250px; left: 600px;">
+</div>
+<script th:src="@{/static/js/piePage.js}"></script>
+</body>
+</html>

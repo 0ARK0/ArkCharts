@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MindMap</title>
+    <script th:src="@{/static/js/echarts.min.js}"></script>
+    <script th:src="@{/static/js/jquery-1.11.0.min.js}"></script>
+    <script th:src="@{/static/js/public.js}"></script>
+    <link th:href="@{/static/css/public.css}" rel="stylesheet">
+    <link th:href="@{/static/css/mindMapPage.css}" rel="stylesheet">
+</head>
+<body>
+<div id="top-menu">
+    <div class="uploadDiv" th:if="(${#strings.isEmpty(jsonData)})">
+        <span>上传文件</span>
+        <input id="fileUploader" class="file" type="file" accept=".xls, .xlsx" onchange="uploadFile()">
+    </div>
+    <img class="question" th:src="@{/static/img/question.png}" width="20px" height="20px"  title="查看格式要求" onclick="openMsgDiv()" th:if="(${#strings.isEmpty(jsonData)})">
+    <div class="logo" th:if="(${not #strings.isEmpty(jsonData)})">
+        <img th:src="@{/static/img/logo.png}" width="220px" height="70px">
+    </div>
+    <div class="topItem" style="padding-left: 200px">
+        <input id="searchInput" type="text" placeholder="搜索内容">
+        <button class="btn" id="searchBtn" onclick="searchData()">搜索</button>
+    </div>
+    <div class="topItem">
+        <button class="btn" onclick="reshowChart()">还原</button>
+    </div>
+    <div class="topItem">
+        <button class="btn add-btn" onclick="saveChart()">保存图表</button>
+    </div>
+    <div class="topItem">
+        <button class="btn" onclick="changeChartColor()">换肤</button>
+    </div>
+    <div class="topItem">
+        <button class="btn green-btn" onclick="toStart()">我的图表</button>
+    </div>
+    <div class="topItem">
+        <button id="openMS" class="btn" onclick="openMoreSettings()">更多设置</button>
+    </div>
+</div>
+
+<div id="main" style="width: 100%;height: 640px"></div>
+
+<div id="right-click-menu" class="click-menu">
+    <div class="right-click-menu-inner" onclick="addNode()">新增</div>
+    <div class="right-click-menu-inner" onclick="updateNode()">编辑</div>
+    <div class="right-click-menu-inner" onclick="deleteNode()">删除</div>
+</div>
+
+<div id="input-menu" class="small-menu click-menu" style="width:150px;height:80px;">
+    <input id="newNodeName" type="text" placeholder="名称" style="width: 140px;" onkeypress="bindEnterByAddMenu()">
+    <p></p>
+    <button id="add-menu-ybtn" class="small-btn" onclick="addNodeConfirm(true)">确认</button> &nbsp;&nbsp;&nbsp;
+    <button class="small-btn" onclick="addNodeConfirm(false)">取消</button>
+</div>
+
+<div id="delete-menu" class="small-menu click-menu" style="width: 150px;height: 100px;">
+    <p>确认删除吗？</p>
+    <button class="small-btn" onclick="deleteNodeConfirm(true)">确认</button> &nbsp;&nbsp;&nbsp;
+    <button class="small-btn" onclick="deleteNodeConfirm(false)">取消</button>
+</div>
+
+<div id="update-menu" class="small-menu click-menu" style="width: 150px;height: 80px;">
+    <input id="newNodeName2" type="text" placeholder="新的名称" style="width: 140px;" onkeypress="bindEnterByUpdateMenu()">
+    <p></p>
+    <button id="update-menu-ybtn" class="small-btn" onclick="updateNodeConfirm(true)">确认</button>&nbsp;&nbsp;&nbsp;
+    <button class="small-btn" onclick="updateNodeConfirm(false)">取消</button>
+</div>
+
+<div class="fullHide"></div>
+
+<input type="hidden" id="jsonDataInput" th:value="${jsonData}">
+<input type="hidden" id="chartPathInput" th:value="${chartPath}">
+
+<div class="msgDiv shadow">
+    <div class="msgDiv-head">上传文件的格式要求</div>
+    <div class="msgDiv-content">
+        <p>1.上传文件创建图表。只能提交Excel文件，支持xls和xlsx两种格式。</p>
+        <p>2.Excel文件的文件名作为思维导图的根节点，第一列作为第一层子节点，以此类推，示例图如下：</p>
+        <a th:href='@{/static/img/mindMapExcelData.png}' target='_blank'><img width='350' height='200px' th:src='@{/static/img/mindMapExcelData.png}'></a>
+        <p>上图表格对应生成的图表如下图所示：</p>
+        <a th:href='@{/static/img/mindMapExcelChart.png}' target='_blank'><img width='350' height='200px' th:src='@{/static/img/mindMapExcelChart.png}'></a>
+    </div>
+    <div class="msgDiv-button">
+        <button class="btn close-btn" onclick="closeMsgDiv()">关闭</button>
+    </div>
+</div>
+<!--更多设置-->
+<div id="moreSettings" class="click-menu">
+    <div class="right-click-menu-inner" onclick="openSetChartName()">图表名称</div>
+</div>
+<!--信息输入框-->
+<div id="msgInputDiv" class="input-menu click-menu" style="position: absolute; top: 250px; left: 600px;">
+
+</div>
+<script th:src="@{/static/js/mindMapPage.js}"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+/*小按钮*/
+.small-btn{
+    background-color: #ecf0f1;
+    border: none;
+    color: black;
+    padding: 4px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 4px;
+}
+.small-btn:hover {
+    cursor: pointer;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+/*信息显示框*/
+#input-menu{
+    text-align: center;
+    background-color: #576574;
+    padding: 10px;
+    color: white;
+}
+
+#delete-menu{
+    text-align: center;
+    background-color: #576574;
+    padding: 10px;
+    color: white;
+}
+
+#update-menu{
+    text-align: center;
+    background-color: #576574;
+    padding: 10px;
+    color: white;
+}
+
+#searchInput{
+    margin-top: 5px;
+    border-radius:4px;
+    border:1px solid #c8cccf;
+    color:#6a6f77;
+    -web-kit-appearance:none;
+    -moz-appearance: none;
+    outline:0;
+    padding:0 1em;
+    text-decoration:none;
+    display: inline;
+    width:200px;
+    font-size: 16px;
+}

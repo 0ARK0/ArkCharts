@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Graph</title>
+    <script th:src="@{/static/js/echarts.min.js}"></script>
+    <script th:src="@{/static/js/jquery-1.11.0.min.js}"></script>
+    <script th:src="@{/static/js/public.js}"></script>
+    <link th:href="@{/static/css/public.css}" rel="stylesheet">
+    <link th:href="@{/static/css/graphPage.css}" rel="stylesheet">
+</head>
+<body>
+<div id="top-menu">
+    <div class="logo">
+        <img th:src="@{/static/img/logo.png}" width="220px" height="70px">
+    </div>
+    <div class="topItem" style="padding-left: 200px">
+        <input id="searchInput" type="text" placeholder="搜索内容">
+        <button class="btn" id="searchBtn" onclick="searchData()">搜索</button>
+    </div>
+    <div class="topItem">
+        <button class="btn" onclick="openSetCategoryDiv()">设置系列</button>
+    </div>
+    <div class="topItem">
+        <button class="btn add-btn" onclick="saveChart()">保存图表</button>
+    </div>
+    <div class="topItem">
+        <button class="btn green-btn" onclick="toStart()">我的图表</button>
+    </div>
+    <div class="topItem">
+        <button id="openMS" class="btn" onclick="openMoreSettings()">更多设置</button>
+    </div>
+</div>
+
+<div id="main" style="width: 100%;height: 640px"></div>
+
+<div id="graph-right-click-menu" class="click-menu" style="width:150px;height:auto;z-index: 5100;">
+    <div id="graph-newNode" class="right-click-menu-inner aboutGNode" onclick="openForNewGNode()">新增节点</div>
+    <div id="graph-newLink" class="right-click-menu-inner aboutGNode" onclick="openForNewLink()">新增连接</div>
+    <div id="graph-red" class="right-click-menu-inner aboutLink" onclick="redLink()">标红/取消</div>
+    <div id="graph-editNode" class="right-click-menu-inner aboutGNode" onclick="openForEditGNode()">编辑节点</div>
+    <div id="graph-setCategory" class="right-click-menu-inner aboutGNode" onclick="openForSetCategory()">设置系列</div>
+    <div id="graph-editLink" class="right-click-menu-inner aboutLink" onclick="openForEditLink()">编辑连接</div>
+    <div id="graph-delNode" class="right-click-menu-inner aboutGNode" onclick="deleteGNode()">删除节点</div>
+    <div id="graph-delLink" class="right-click-menu-inner aboutLink" onclick="deleteLink()">删除连接</div>
+</div>
+<div id="newGNodeMenu" class="click-menu gNodeMenus">
+    <input id="newGNodeName" style="width: 130px;" placeholder="新节点的名称">
+    <p></p>
+    <input id="newGLinkName" style="width: 130px;" placeholder="连接线名称">
+    <p></p>
+    <button class="small-btn" onclick="newGNode()">确定</button>
+    <button class="small-btn" onclick="cancelNewGNode()">取消</button>
+</div>
+<div id="editGNodeMenu" class="click-menu gNodeMenus">
+    <input id="editGNodeName" style="width: 130px;" placeholder="新的名称">
+    <p></p>
+    <button class="small-btn" onclick="editGNode()">确定</button>
+    <button class="small-btn" onclick="cancelEditGNode()">取消</button>
+</div>
+<div id="setCategoryMenu" class="click-menu gNodeMenus">
+    <div class="chooseCategory"></div>
+    <p></p>
+    <button class="small-btn" onclick="setCategoryForNode()">确定</button>
+    <button class="small-btn" onclick="cancelSetCategory()">取消</button>
+</div>
+<div id="newLinkMenu" class="click-menu gNodeMenus">
+    <input id="targetId" style="width: 130px;" placeholder="目标节点的Id">
+    <p></p>
+    <input id="newLinkName" style="width: 130px;" placeholder="连接线名称">
+    <p></p>
+    <button class="small-btn" onclick="newLink()">确定</button>
+    <button class="small-btn" onclick="cancelNewLink()">取消</button>
+</div>
+<div id="editLinkMenu" class="click-menu gNodeMenus">
+    <input id="editLinkName" style="width: 130px;" placeholder="新的名称">
+    <p></p>
+    <button class="small-btn" onclick="editLink()">确定</button>
+    <button class="small-btn" onclick="cancelEditLink()">取消</button>
+</div>
+
+<div class="fullHide"></div>
+<input type="hidden" id="jsonDataInput" th:value="${jsonData}">
+<input type="hidden" id="chartPathInput" th:value="${chartPath}">
+<div id="setCategoryDiv" class="settings shadow">
+    <div class="settings-top">
+        <div class="settings-name">设置系列</div>
+        <div class="settings-close" onclick="closeSetCategoryDiv()">关闭</div>
+    </div>
+    <hr>
+    <div id="categoryBody" class="settingsBody">
+    </div>
+    <div class="settings-bottom">
+        <button class="btn green-btn" onclick="setCategory()">应用</button>
+    </div>
+</div>
+
+<!--更多设置-->
+<div id="moreSettings" class="click-menu">
+    <div class="right-click-menu-inner" onclick="openSetChartName()">图表名称</div>
+</div>
+<!--信息输入框-->
+<div id="msgInputDiv" class="input-menu click-menu" style="position: absolute; top: 250px; left: 600px; background-color: #576574;">
+
+</div>
+<script th:src="@{/static/js/graphPage.js}"></script>
+</body>
+</html>

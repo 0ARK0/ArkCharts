@@ -1,0 +1,68 @@
+/*右击显示的弹出框*/
+.click-menu {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    display: none;
+    z-index: 1000;
+    background-color: white;
+    border: #b9bbbe 1px solid;
+    border-radius: 5px;
+    /*阴影效果*/
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#909090,direction=120,strength=4);
+    -moz-box-shadow: 2px 2px 10px #909090;
+    -webkit-box-shadow: 2px 2px 10px #909090;
+    box-shadow:2px 2px 10px #909090;
+}
+.click-menu:hover{
+    cursor: pointer;
+}
+.right-click-menu-inner{
+    padding: 10px;
+    width: 131px;
+    height: 30px;
+}
+.right-click-menu-inner:hover{
+    cursor: pointer;
+    background-color: #b9bbbe;
+}
+.right-click-menu-inner a:link{
+    color: black;
+}
+.right-click-menu-inner a:visited{
+    color: black;
+}
+.right-click-menu-inner a{
+    text-decoration: none;
+}
+
+.chooseCategory{
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.gNodeMenus{
+    width:150px;
+    height:auto;
+    padding: 10px;
+    text-align: center;
+    z-index: 5100;
+    background-color: #576574;
+    color: white;
+}
+
+#searchInput{
+    margin-top: 5px;
+    border-radius:4px;
+    border:1px solid #c8cccf;
+    color:#6a6f77;
+    -web-kit-appearance:none;
+    -moz-appearance: none;
+    outline:0;
+    padding:0 1em;
+    text-decoration:none;
+    display: inline;
+    width:200px;
+    font-size: 16px;
+}
+
