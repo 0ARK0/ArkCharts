@@ -275,6 +275,19 @@ function setChartName() {
     cancelInput();
 }
 
+// 下载为Excel文件
+function downloadAsExcel() {
+    let chartPath = $("#chartPathInput").val();
+    if (chartPath === "" || chartPath === null || chartPath === undefined){
+        alert("请先保存图表后再下载文件");
+        cancelInput();
+        return;
+    }
+    chartPath = chartPath.replace(/\\/g,"/");
+    window.open(URL + "/file/mindMapToExcel?chartPath=" + chartPath);
+    cancelInput();
+}
+
 // 取消设置
 function cancelInput() {
     $("#msgInputDiv").empty();

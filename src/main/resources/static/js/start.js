@@ -88,8 +88,14 @@ function toGraphPage() {
     location.href = "/ArkCharts/toGraphPage";
 }
 
+// 打开创建饼图的页面
 function toPiePage() {
     location.href = "/ArkCharts/toPiePage";
+}
+ 
+// 打开创建折线图的页面
+function toLinePage() {
+    location.href = "/ArkCharts/toLinePage";
 }
 
 // 打开图表
@@ -105,6 +111,8 @@ function openChart(dd) {
         location.href = "/ArkCharts/toGraphPage?chartId=" + chartId;
     }else if(type === "pie"){
         location.href = "/ArkCharts/toPiePage?chartId=" + chartId;
+    }else if(type === "line"){
+        location.href = "/ArkCharts/toLinePage?chartId=" + chartId;
     }
 }
 
@@ -146,11 +154,52 @@ function showChart(i) {
         showGraphChart(i, jsonData);
     } else if (type === "pie"){
         showPieChart(i, jsonData);
+    } else if (type === "line"){
+        showLineChart(i, jsonData);
     }
 }
 
 // 柱状图
 function showBarChart(index, jsonData) {
+    let chartObject = jsonData;
+    // 属性
+    let xData = chartObject.xData; // x轴数据
+    let seriesArray = chartObject.seriesArray;
+    let xAxisName = '';
+    let yAxisName = '';
+    let yAxisMax = null;
+    let yAxisMin = null;
+    myChartArray[index].resize();
+    myChartArray[index].setOption(option = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        // x轴
+        xAxis: {
+            data: xData,
+            name: xAxisName,
+        },
+        yAxis: {
+            type: 'value',
+            name: yAxisName,
+            max: yAxisMax,
+            min: yAxisMin,
+        },
+        // 数据
+        series: seriesArray,
+        // 铺满div
+        grid: {
+            top: 10,
+            bottom: 10
+        },
+    });
+}
+
+// 折线图
+function showLineChart(index, jsonData) {
     let chartObject = jsonData;
     // 属性
     let xData = chartObject.xData; // x轴数据

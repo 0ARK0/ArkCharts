@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Line</title>
+    <script th:src="@{/static/js/echarts.min.js}"></script>
+    <script th:src="@{/static/js/jquery-1.11.0.min.js}"></script>
+    <script th:src="@{/static/js/public.js}"></script>
+    <link th:href="@{/static/css/public.css}" rel="stylesheet">
+    <link th:href="@{/static/css/barPage.css}" rel="stylesheet">
+    <link th:href="@{/static/css/linePage.css}" rel="stylesheet">
+</head>
+<body>
+<div id="top-menu" class="shadow">
+    <div class="uploadDiv" th:if="(${#strings.isEmpty(jsonData)})">
+        <span>上传文件</span>
+        <input id="fileUploader" class="file" type="file" accept=".xls, .xlsx" onchange="chooseExcelFileType()">
+    </div>
+    <img class="question" th:src="@{/static/img/question.png}" width="20px" height="20px"  title="查看格式要求" onclick="openMsgDiv()" th:if="(${#strings.isEmpty(jsonData)})">
+    <div class="logo" th:if="(${not #strings.isEmpty(jsonData)})">
+        <img th:src="@{/static/img/logo.png}" width="220px" height="70px">
+    </div>
+    <div class="topItem" style="padding-left: 200px">
+        <button class="btn" onclick="openSetLegendDiv()">设置系列</button>
+    </div>
+    <div class="topItem">
+        <button class="btn" onclick="openSetXDataDiv()">X轴数据</button>
+    </div>
+    <div class="topItem">
+        <button class="btn" onclick="openSetYDataDiv()">Y轴数据</button>
+    </div>
+    <div class="topItem">
+        <button class="btn add-btn" onclick="saveChart()">保存图表</button>
+    </div>
+    <div class="topItem">
+        <button class="btn green-btn" onclick="toStart()">我的图表</button>
+    </div>
+    <div class="topItem">
+        <button id="openMS" class="btn" onclick="openMoreSettings()">更多设置</button>
+    </div>
+</div>
+
+<div id="main" style="width: 98%;height: 600px;"></div>
+
+<!--隐藏div-->
+<div class="fullHide"></div>
+<div class="msgDiv shadow">
+    <div class="msgDiv-head">上传文件的格式要求</div>
+    <div class="msgDiv-content">
+        <p>1.上传文件创建图表。只能提交Excel文件，支持xls和xlsx两种格式。</p>
+        <p>2.Excel中的内容有两种方式，第一种：Excel文件中系列在第一列，X轴数据项在第一行，中间的单元格填写数据，示例图如下：</p>
+        <a th:href='@{/static/img/barExcelData.png}' target='_blank'><img width='350' height='200px' th:src='@{/static/img/barExcelData.png}' title="点击查看大图"></a>
+        <p>上图表格对应生成的图表如下图所示：</p>
+        <a th:href='@{/static/img/lineExcelChart.png}' target='_blank'><img width='350' height='200px' th:src='@{/static/img/barExcelChart.png}' title="点击查看大图"></a>
+        <p>3.第二种：Excel文件中X轴数据项在第一列，系列在第一行，中间的单元格填写数据，示例图如下：</p>
+        <a th:href='@{/static/img/barExcelData2.png}' target='_blank'><img width='350' height='200px' th:src='@{/static/img/barExcelData2.png}' title="点击查看大图"></a>
+        <p>上图表格对应生成的图表如下图所示：</p>
+        <a th:href='@{/static/img/lineExcelChart2.png}' target='_blank'><img width='350' height='200px' th:src='@{/static/img/barExcelChart2.png}' title="点击查看大图"></a>
+    </div>
+    <div class="msgDiv-button">
+        <button class="btn close-btn" onclick="closeMsgDiv()">关闭</button>
+    </div>
+</div>
+<input type="hidden" id="jsonDataInput" th:value="${jsonData}">
+<input type="hidden" id="chartPathInput" th:value="${chartPath}">
+<!--设置系列的div-->
+<div id="setLegendDiv" class="settings shadow">
+    <div class="settings-top">
+        <div class="settings-name">设置系列</div>
+        <div class="settings-close" onclick="closeSetLegendDiv()">关闭</div>
+    </div>
+    <hr>
+    <div id="legendBody" class="settingsBody">
+    </div>
+    <div class="settings-bottom">
+        <button class="btn green-btn" onclick="setLegend()">应用</button>
+    </div>
+</div>
+<!--设置X轴数据的div-->
+<div id="setXDataDiv" class="settings shadow">
+    <div class="settings-top">
+        <div class="settings-name">设置X轴数据项</div>
+        <div class="settings-close" onclick="closeSetXDataDiv()">关闭</div>
+    </div>
+    <hr>
+    <div id="xDataBody" class="settingsBody">
+    </div>
+    <div class="settings-bottom">
+        <button class="btn green-btn" onclick="setXData()">应用</button>
+    </div>
+</div>
+<!--设置Y轴数据的div-->
+<div id="setYDataDiv">
+    <div id="yDataTop">
+        <div class="yDataTop-left-item">设置Y轴数据</div>
+        <div class="yDataTop-right-item">
+            <button class="btn close-btn" onclick="closeSetYDataDiv()">关闭</button>
+        </div>
+        <div class="yDataTop-right-item">
+            <button class="btn green-btn" onclick="setYData()">应用</button>
+        </div>
+    </div>
+    <div class="yDataBody">
+        <table class="zebra"></table>
+    </div>
+</div>
+<!--更多设置-->
+<div id="moreSettings" class="click-menu">
+    <div class="right-click-menu-inner" onclick="openSetChartName()">图表名称</div>
+    <div class="right-click-menu-inner" onclick="openSetAxisName()">坐标轴名称</div>
+    <div class="right-click-menu-inner" onclick="openSetMaxMin()">最大值和最小值</div>
+    <div class="right-click-menu-inner" onclick="openSetAverage()">显示/隐藏平均值</div>
+    <div class="right-click-menu-inner" onclick="downloadAsExcel()">下载为Excel文件</div>
+</div>
+<!--信息输入框-->
+<div class="input-menu click-menu" style="position: absolute; top: 250px; left: 600px;">
+
+</div>
+<script th:src="@{/static/js/linePage.js}"></script>
+</body>
+</html>

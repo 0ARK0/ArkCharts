@@ -316,15 +316,32 @@ function openMsgDiv() {
     $(".msgDiv").show();
 }
 
-// 上传Excel文件，传回json对象
-function uploadFile() {
+// 选择需要上传的Excel文件的内容格式
+function chooseExcelFileType() {
     let f = $('#fileUploader').get(0).files[0];
     if("" === f || null === f || f === undefined){
         alert("请选择文件！");
         return;
     }
+    let string = '<p>选择上传的Excel文件的内容格式</p>';
+    string += '<p><input type="radio" name="excelTypeRadio" value="0"><a href="/ArkCharts/static/img/barExcelData.png" target="_blank"><img src="/ArkCharts/static/img/barExcelData.png" width="150px" height="80px" title="点击查看大图"></a></p>';
+    string += '<p><input type="radio" name="excelTypeRadio" value="1"><a href="/ArkCharts/static/img/barExcelData2.png" target="_blank"><img src="/ArkCharts/static/img/barExcelData2.png" width="150px" height="80px" title="点击查看大图"></a></p>';
+    string += '<button onclick="uploadFile()">确定</button>';
+    $(".input-menu").append(string);
+    $('#moreSettings').hide();
+    isOpen = false;
+    $(".fullHide").show();
+    $(".input-menu").show();
+}
+
+// 上传Excel文件，传回json对象
+function uploadFile() {
+    let f = $('#fileUploader').get(0).files[0];
+    let typeVal = $(".input-menu").find("input:radio[name='excelTypeRadio']:checked").val();
+    cancelInput();
     let formData = new FormData();
     formData.append("file", f);
+    formData.append("typeVal", typeVal);
     $.ajax({
         url: URL + '/file/excelToBar',
         type: 'POST',
@@ -459,6 +476,19 @@ function setAverage() {
        seriesArray[parseInt(value)].markLine = markLine;
     });
     showChart();
+    cancelInput();
+}
+
+// 下载为Excel文件
+function downloadAsExcel() {
+    let chartPath = $("#chartPathInput").val();
+    if (chartPath === "" || chartPath === null || chartPath === undefined){
+        alert("请先保存图表后再下载文件");
+        cancelInput();
+        return;
+    }
+    chartPath = chartPath.replace(/\\/g,"/");
+    window.open(URL + "/file/barToExcel?chartPath=" + chartPath);
     cancelInput();
 }
 

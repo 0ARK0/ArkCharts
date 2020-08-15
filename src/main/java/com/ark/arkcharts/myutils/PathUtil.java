@@ -1,5 +1,7 @@
 package com.ark.arkcharts.myutils;
 
+import com.ark.arkcharts.config.PathConfig;
+
 /**
  * 处理文件路径的工具类
  */
@@ -9,9 +11,9 @@ public class PathUtil {
     // 操作系统对应的文件路径分隔符
     public static final String SP = System.getProperty("file.separator");
     // win系统的项目起始目录
-    private static final String WIN_START_DIR = "E:\\SpringBootProjects\\ArkCharts";
+    public static final String WIN_START_DIR = "E:\\SpringBootProjects\\ArkCharts";
     // linux系统的项目起始目录
-    private static final String LINUX_START_DIR = "/usr/local/SpringBootProjects/ArkCharts";
+    public static final String LINUX_START_DIR = "/usr/local/SpringBootProjects/ArkCharts";
 
     private PathUtil() {}
 

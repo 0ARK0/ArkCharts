@@ -1,21 +1,28 @@
 package com.ark.arkcharts.serviceImpl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.ark.arkcharts.entity.chartdata.*;
 import com.ark.arkcharts.service.FileService;
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.formula.functions.Column;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.*;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,11 +57,13 @@ public class FileServiceImpl implements FileService {
 
     /**
      * excel表格转柱状图
-     * @param file
-     * @return
+     * @param file excel文件
+     * @param type 转换的excel格式类型，取值为0和1。0代表系列在第一列，X轴数据项在第一行，中间的单元格填写数据；
+     *             1带表X轴数据项在第一列，系列在第一行，中间的单元格填写数据。
+     * @return BarData
      */
     @Override
-    public BarData excelToBar(MultipartFile file) {
+    public BarData excelToBar(MultipartFile file, String type, String toChartType) {
         BarData barData = new BarData();
         setChartName(barData, file.getOriginalFilename());
         Workbook workbook = getWorkbook(file); // 获取文档
@@ -64,31 +73,60 @@ public class FileServiceImpl implements FileService {
         // 准备集合
         List<String> legendArray = new ArrayList<>();
         List<String> xData = new ArrayList<>();
-        String[][] yData = new String[rowNum - 1][colNum - 1];
+        String[][] yData = new String[0][];
         List<ChartSeries> seriesArray = new ArrayList<>();
-        // 读取表格数据存入对象
-        for (int i = 0; i < rowNum; i++) {
-            for (int j = 0; j < colNum; j++) {
-                if(i == 0 && j == 0){
-                    continue;
+        // 按不同类型的表格内容读取表格数据存入对象
+        if ("0".equals(type)){
+            yData = new String[rowNum - 1][colNum - 1];
+            for (int i = 0; i < rowNum; i++) {
+                for (int j = 0; j < colNum; j++) {
+                    if(i == 0 && j == 0){
+                        continue;
+                    }
+                    String value = getCellValueByCell(sheet.getRow(i).getCell(j));
+                    if(i == 0){
+                        xData.add(value);
+                        continue;
+                    }
+                    if(j == 0){
+                        legendArray.add(value);
+                        continue;
+                    }
+                    yData[i - 1][j - 1] = value;
                 }
-                String value = getCellValueByCell(sheet.getRow(i).getCell(j));
-                if(i == 0){
-                    xData.add(value);
-                    continue;
+                if(i > 0){
+                    BarSeries series = new BarSeries();
+                    series.setName(legendArray.get(i - 1));
+                    series.setType(toChartType);
+                    series.setData(yData[i - 1]);
+                    seriesArray.add(series);
                 }
-                if(j == 0){
-                    legendArray.add(value);
-                    continue;
-                }
-                yData[i - 1][j - 1] = value;
             }
-            if(i > 0){
-                BarSeries series = new BarSeries();
-                series.setName(legendArray.get(i - 1));
-                series.setType("bar");
-                series.setData(yData[i - 1]);
-                seriesArray.add(series);
+        } else if ("1".equals(type)) {
+            yData = new String[colNum - 1][rowNum - 1];
+            for (int i = 0; i < colNum; i++) {
+                for (int j = 0; j < rowNum; j++) {
+                    if(i == 0 && j == 0){
+                        continue;
+                    }
+                    String value = getCellValueByCell(sheet.getRow(j).getCell(i));
+                    if(i == 0){
+                        xData.add(value);
+                        continue;
+                    }
+                    if(j == 0){
+                        legendArray.add(value);
+                        continue;
+                    }
+                    yData[i - 1][j - 1] = value;
+                }
+                if(i > 0){
+                    BarSeries series = new BarSeries();
+                    series.setName(legendArray.get(i - 1));
+                    series.setType("bar");
+                    series.setData(yData[i - 1]);
+                    seriesArray.add(series);
+                }
             }
         }
         barData.setLegendArray(legendArray);
@@ -149,6 +187,143 @@ public class FileServiceImpl implements FileService {
         pieData.setDataArray(dataArray);
         pieData.setSeriesArray(seriesArray);
         return pieData;
+    }
+
+    /**
+     * 根据柱状图的json文件生成excel表格，以文件流的形式返回，前端下载
+     * @param chartPath
+     * @param response
+     */
+    @Override
+    public void barToExcel(String chartPath, HttpServletResponse response) {
+        // 根据图表json文件的路径读取文件内容
+        JSONObject chartObj = getChartJsonObj(chartPath);
+        // 获取图表中的数据
+        JSONArray legendArray = chartObj.getJSONArray("legendArray");
+        JSONArray xData = chartObj.getJSONArray("xData");
+        JSONArray yData = chartObj.getJSONArray("yData");
+        String fileName = chartObj.getString("chartName");
+        // 创建excel表格文件
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        // 添加一个sheet页
+        XSSFSheet sheet = workbook.createSheet("sheet1");
+        // 创建第一行，柱状图的第一行是xData
+        XSSFRow row1 = sheet.createRow(0);
+        // 第一行第一个单元格为空值
+        row1.createCell(0).setCellValue("");
+        for (int i = 0; i < xData.size(); i++) {
+            row1.createCell(i + 1).setCellValue(xData.getString(i));
+        }
+        for (int i = 0; i < legendArray.size(); i++) {
+            XSSFRow row = sheet.createRow(i + 1);
+            // 每一行的第一个单元格都是系列名称
+            row.createCell(0).setCellValue(legendArray.getString(i));
+            JSONArray valueData = yData.getJSONArray(i);
+            for (int j = 0; j < xData.size(); j++) {
+                row.createCell(j + 1).setCellValue(valueData.getDoubleValue(j));
+            }
+        }
+        // 输出
+        outputExcel(fileName, workbook, response);
+    }
+
+    /**
+     * 根据思维导图的json文件创建一个excel文件并返回
+     * @param chartPath
+     * @param response
+     */
+    @Override
+    public void mindMapToExcel(String chartPath, HttpServletResponse response) {
+        JSONObject chartObj = getChartJsonObj(chartPath);
+        JSONObject rootNode = chartObj.getJSONObject("rootNode");
+        String fileName = chartObj.getString("chartName");
+        // 创建excel表格文件
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        // 添加一个sheet页
+        XSSFSheet sheet = workbook.createSheet("sheet1");
+        // 获取根节点的子节点数组
+        JSONArray rootChildren = rootNode.getJSONArray("children");
+        int rowIndex = 0;
+        for (int i = 0; i < rootChildren.size(); i++) {
+            rowIndex = mindMapNodeIntoExcel(rootChildren.getJSONObject(i), sheet, rowIndex, 0);
+        }
+        // 输出
+        outputExcel(fileName, workbook, response);
+    }
+
+    @Override
+    public BarData excelToLine(MultipartFile file, String type) {
+        BarData barData = excelToBar(file, type, "line");
+        return barData;
+    }
+
+    /**
+     * 根据图表json文件的路径读取文件内容
+     * @param chartPath
+     * @return
+     */
+    private JSONObject getChartJsonObj(String chartPath){
+        String chartStr = "";
+        try {
+            chartStr = FileUtils.readFileToString(new File(chartPath), "utf-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return JSONObject.parseObject(chartStr);
+    }
+
+    /**
+     * 将表格文件输出到response输出流
+     * @param fileName excel文件的文件名
+     * @param workbook 表格对象
+     * @param response response对象
+     */
+    private void outputExcel(String fileName, XSSFWorkbook workbook, HttpServletResponse response){
+        response.reset();
+        response.setContentType("application/vnd.ms-excel;charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename=" +
+                new String((fileName + ".xlsx").getBytes(), StandardCharsets.ISO_8859_1));
+        ServletOutputStream out = null;
+        try {
+            out = response.getOutputStream();
+            // 将表格文件输出
+            workbook.write(out);
+            out.flush();
+        } catch (IOException e) {
+            if(out != null){
+                try {
+                    out.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 递归完成json节点填入单元格的操作
+     * @param node 思维导图对象节点
+     * @param sheet 需要填写数据的表格sheet页
+     * @param rowIndex 当前填写数据的单元格的行标
+     * @param colIndex 当前填写数据的单元格的行列
+     * @return int值，表示下个节点的填写数据的单元格的行标
+     */
+    private int mindMapNodeIntoExcel(JSONObject node, XSSFSheet sheet, int rowIndex, int colIndex){
+        XSSFRow row = sheet.getRow(rowIndex);
+        if(row == null){
+            row = sheet.createRow(rowIndex);
+        }
+        row.createCell(colIndex).setCellValue(node.getString("name"));
+        JSONArray children = node.getJSONArray("children");
+        if (children == null || children.size() == 0){
+            return rowIndex + 1;
+        }
+        for (int i = 0; i < children.size(); i++) {
+            rowIndex = mindMapNodeIntoExcel(children.getJSONObject(i), sheet, rowIndex,
+                    colIndex + 1);
+        }
+        return rowIndex;
     }
 
     /**

@@ -1,0 +1,61 @@
+server:
+  servlet:
+    context-path: /ArkCharts
+  port: 8000
+
+spring:
+  mvc:
+    static-path-pattern: /static/**
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+  thymeleaf:
+    cache: false
+    check-template: true
+    check-template-location: true
+    enabled: true
+    enable-spring-el-compiler: false
+    encoding: UTF-8
+    mode: HTML
+    prefix: classpath:/templates/
+    suffix: .html
+    reactive:
+      max-chunk-size: 0B
+    servlet:
+      content-type: text/html
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/arkcharts?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: 19980118
+    driverClassName: com.mysql.cj.jdbc.Driver
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    filters: stat,wall,log4j
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    useGlobalDataSourceStat: true
+
+mybatis:
+  typeAliasesPackage: com.ark.arkcharts.entity
+
+pathConfig:
+  win: E:\SpringBootProjects\ArkCharts
+  linux: /usr/local/SpringBootProjects/ArkCharts
+
+logging:
+  level:
+    com:
+      ark:
+        arkcharts:
+          trace
